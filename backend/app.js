@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 const bookRoutes = require('./routes/book');
+const userRoutes = require('./routes/user');
 
 app.use(cors());
 app.use(express.json());
@@ -18,7 +19,7 @@ mongoose.connect(process.env.MONGODB_URI)
     console.error('Erreur de connexion à MongoDB :', error.message);
   });
 
-app.get((req, res, next) => {
+app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
@@ -27,9 +28,9 @@ app.get((req, res, next) => {
 
 app.get('/', (req, res, next) => {
   res.send('Mon Vieux Grimoire : serveur opérationnel !');
-  next();
 });
 
 app.use('/api/books', bookRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;

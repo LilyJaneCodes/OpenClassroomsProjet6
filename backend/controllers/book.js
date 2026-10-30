@@ -3,7 +3,8 @@ const Book = require('../models/Book');
 exports.createBook = (req, res, next) => {
   delete req.body._id;
   const book = new Book({
-    ...req.body
+    ...req.body,
+    userId: req.auth.userId
   });
   book.save()
     .then(() => res.status(201).json({ message: 'Livre enregistré !' }))
@@ -14,32 +15,42 @@ exports.createBook = (req, res, next) => {
 exports.modifyBook = (req, res, next) => {
   const bookObject = { ...req.body };
   delete bookObject._id;
+  delete bookObject.userId;
 
-  Book.updateOne(
-    { _id: req.params.id },
-    { $set: bookObject }
-  )
-    .then(result => {
-      if (result.matchedCount === 0) {
-        return res.status(404).json({
-          message: 'Livre non trouvé !'
-        });
+  Book.findOne({ _id: req.params.id })
+    .then(book => {
+      if (!book) {
+        return res.status(404).json({ message: 'Livre non trouvé !' });
       }
 
-      res.status(200).json({
-        message: 'Livre modifié !'
-      });
+      if (book.userId.toString() !== req.auth.userId) {
+        return res.status(403).json({ message: 'Requête non autorisée !' });
+      }
+
+      Book.updateOne(
+        { _id: req.params.id },
+        { $set: bookObject }
+      )
+        .then(() => res.status(200).json({ message: 'Livre modifié !' }))
+        .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(400).json({ error }));
 };
 
 exports.deleteBook = (req, res, next) => {
-  Book.deleteOne({ _id: req.params.id })
-    .then(result => {
-      if (result.deletedCount === 0) {
+  Book.findOne({ _id: req.params.id })
+    .then(book => {
+      if (!book) {
         return res.status(404).json({ message: 'Livre non trouvé !' });
       }
-      res.status(200).json({ message: 'Livre supprimé !' });
+
+      if (book.userId.toString() !== req.auth.userId) {
+        return res.status(403).json({ message: 'Requête non autorisée !' });
+      }
+
+      Book.deleteOne({ _id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Livre supprimé !' }))
+        .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(400).json({ error }));
 };
