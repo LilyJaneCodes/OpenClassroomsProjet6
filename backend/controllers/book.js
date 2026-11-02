@@ -146,6 +146,14 @@ exports.rateBook = (req, res, next) => {
 
       book.ratings.push(rating);
 
+      // Calcul de la moyenne des notes
+      const totalRatings = book.ratings.reduce(
+        (total, rating) => total + rating.grade,
+        0
+      );
+
+      book.averageRating = totalRatings / book.ratings.length;
+
       book.save()
         .then(() => res.status(200).json(book))
         .catch(error => res.status(400).json({ error }));
