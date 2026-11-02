@@ -11,6 +11,7 @@ router.get('/', bookCtrl.getAllBooks);
 
 // Routes protégées
 router.post('/', auth, multer, optimizeImage, bookCtrl.createBook);
+router.post('/:id/rating', auth, bookCtrl.rateBook);
 router.put('/:id', auth, multer, optimizeImage, bookCtrl.modifyBook);
 router.delete('/:id', auth, bookCtrl.deleteBook);
 

@@ -119,3 +119,36 @@ exports.getAllBooks = (req, res, next) => {
     .then(books => res.status(200).json(books))
     .catch(error => res.status(400).json({ error }));
 };
+
+exports.rateBook = (req, res, next) => {
+  const rating = {
+    userId: req.auth.userId,
+    grade: req.body.rating
+  };
+
+  Book.findOne({ _id: req.params.id })
+    .then(book => {
+      if (!book) {
+        return res.status(404).json({ message: 'Livre non trouvé !' });
+      }
+
+      if (typeof rating.grade !== 'number' || rating.grade < 0 || rating.grade > 5) {
+        return res.status(400).json({ message: 'La note doit être un nombre entre 0 et 5 !' });
+      }
+
+      const alreadyRated = book.ratings.some(
+        rating => rating.userId === req.auth.userId
+      );
+
+      if (alreadyRated) {
+        return res.status(400).json({ message: 'Vous avez déjà noté ce livre !' });
+      }
+
+      book.ratings.push(rating);
+
+      book.save()
+        .then(() => res.status(200).json(book))
+        .catch(error => res.status(400).json({ error }));
+    })
+    .catch(error => res.status(400).json({ error }));
+};
