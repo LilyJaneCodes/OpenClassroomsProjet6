@@ -6,6 +6,7 @@ const bookCtrl = require('../controllers/book');
 const optimizeImage = require('../middleware/optimize-image');
 
 // Routes publiques
+router.get('/bestrating', bookCtrl.getBestRating);
 router.get('/:id', bookCtrl.getOneBook);
 router.get('/', bookCtrl.getAllBooks);
 

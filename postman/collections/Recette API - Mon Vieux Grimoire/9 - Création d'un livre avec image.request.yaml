@@ -1,0 +1,29 @@
+$kind: http-request
+url: http://localhost:4000/api/books
+method: POST
+body:
+  type: formdata
+  content:
+    - type: text
+      key: book
+      value: |-
+        {
+          "title": "Milk & Honey",
+          "author": "Rupi Kaur",
+          "year": 2022,
+          "genre": "Ecologie",
+          "ratings": []
+        }
+      description: ""
+      disabled: false
+    - type: file
+      key: image
+      src:
+        - /C:/Users/lilyj/Web/OpenClassrooms/Projets/Projet 6/Projet6_Documents_Mon_Vieux_Grimoire/Images des livres/Milk_&_Honey.jpg
+      description: ""
+      disabled: false
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0iny}}"
+order: 9000
