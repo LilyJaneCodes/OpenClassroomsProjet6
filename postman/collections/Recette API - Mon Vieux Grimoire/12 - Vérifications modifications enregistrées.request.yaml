@@ -1,5 +1,0 @@
-$kind: http-request
-url: http://localhost:4000/api/books/6ae9c7ae22127ffab4762f69
-method: GET
-examples: .resources/12 - Vérifications modifications enregistrées.resources/examples
-order: 12000
