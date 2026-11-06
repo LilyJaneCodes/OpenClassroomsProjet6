@@ -73,6 +73,7 @@ Ajoutez les variables suivantes en remplaçant les valeurs d'exemple par vos pro
 ```env
 MONGODB_URI=mongodb+srv://UTILISATEUR:MOT_DE_PASSE@VOTRE_CLUSTER.mongodb.net/NOM_DE_LA_BASE
 PORT=4000
+JWT_SECRET=clésecrète
 ```
 
 **Important :** le fichier `.env` contient des informations confidentielles. Il ne doit jamais être partagé ni envoyé sur GitHub.
