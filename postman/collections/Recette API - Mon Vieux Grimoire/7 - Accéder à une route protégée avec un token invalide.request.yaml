@@ -1,4 +1,0 @@
-$kind: http-request
-url: http://localhost:4000/api/books/6ae86c2369c6bb6ca5c5d342/rating
-method: POST
-order: 7000
